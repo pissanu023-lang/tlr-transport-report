@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b48"><title>TLR V1.12 | รายงานการขนส่งสินค้า</title><link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png"><link rel="icon" type="image/png" href="./icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+
+<html lang="th"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#071b48" name="theme-color"/><title>TLR V1.13 | รายงานการขนส่งสินค้า</title><link href="./icon-180.png" rel="apple-touch-icon" sizes="180x180"/><link href="./icon-192.png" rel="icon" type="image/png"/><link href="manifest.webmanifest" rel="manifest"/>
 <style>
 .tollWrap{border:1px solid #c8d9ec;border-radius:13px;padding:13px;background:#f7fbff;margin-top:12px}
 .tollToggle,.tollAdd{width:100%;margin:11px 0 5px;padding:11px;border:1px solid #8db9de;border-radius:11px;font:700 14px inherit;min-height:44px;color:#1e5684;background:#e8f3fc}
@@ -169,60 +170,87 @@ main .panel:first-child>.fields:first-of-type{padding:0 2px}
 .trip-actions .editbtn,.trip-actions .danger{min-width:61px}
 .trip-actions::after{content:"";display:block;clear:both}
 @media(max-width:620px){.triptable td.trip-actions{min-width:325px;width:325px}.trip-actions .day-action{min-width:150px}}
+</style><style>
+/* TLR 1.13 – form-like mobile wizard (screen only; preserves original accounting logic). */
+@media screen {
+ body{background:#edf1f8}
+ main{max-width:1060px}
+ main>.panel:first-child{max-width:760px;margin:14px auto 18px;border-radius:18px;padding:20px}
+ .tlr-wizard-head{margin:4px 0 18px}
+ .tlr-step-meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:13px;font-weight:700;color:#4c617e}
+ .tlr-progress{height:8px;border-radius:20px;background:#dde5f2;overflow:hidden;margin:10px 0 12px}
+ #tlrProgressFill{height:100%;width:20%;background:#3565bf;border-radius:20px;transition:width .2s ease}
+ .tlr-tabstrip{display:flex;gap:6px;overflow:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch}
+ .tlr-tab{font-size:12px;white-space:nowrap;background:#ecf1fa;color:#385479;padding:10px 11px;border:1px solid #d9e4f5}
+ .tlr-tab.is-active{background:#1a4c92;color:#fff}
+ .tlr-step{background:#fff;border:1px solid #d8e1ee;border-top:5px solid #4270bf;border-radius:13px;padding:18px;margin:10px 0}
+ .tlr-step[hidden],.tlr-wizard-nav [hidden]{display:none!important}
+ .tlr-step h3{font-size:20px;color:#173c6d;margin:0 0 8px}
+ .tlr-step>.group{margin:8px 0;background:#f8faff}
+ .tlr-step label{font-size:15px;gap:9px}
+ .tlr-step input,.tlr-step select{min-height:48px}
+ .tlr-step .fields{grid-template-columns:1fr 1fr}
+ .tlr-step .fields>label{grid-column:1/-1}
+ .tlr-step .groupgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .tlr-step .groupgrid label{min-width:0}
+ .tlr-wizard-nav{display:flex;align-items:center;gap:10px;justify-content:space-between;margin:18px 0 4px}
+ .tlr-wizard-nav button{min-width:120px;min-height:46px}
+ #tlrFinishHint{color:#35577a;font-size:13px}
+ #tlrStep4 .buttons{display:flex}
+ #tlrStep4 #save{background:#16804a}
+ #tlrStep4 #save:focus-visible{outline:3px solid #9ac4ff}
+ @media(max-width:440px){main>.panel:first-child{padding:13px}.tlr-step{padding:12px}.tlr-step .groupgrid{grid-template-columns:1fr}.tlr-step .fields{grid-template-columns:1fr}.tlr-step h3{font-size:18px}}
+}
+@media print{.tlr-wizard{display:none!important}}
 </style></head><body>
-<header class="restoredHeader"><img src="./header.jpg" alt="QLR รายงานการขนส่งสินค้า ภาพรถ Hino และเสือสีขาว"><span class="sr-only">รายงานการขนส่งสินค้า</span></header><div style="padding:12px;background:#fff7df;color:#654900;font-size:13px"><b>TLR v11.1 · เว็บแอปออฟไลน์</b> — ข้อมูลเก็บแยกในแต่ละเครื่อง ก่อนย้ายจากไฟล์ HTML เดิม ให้กดสำรอง JSON ในโปรแกรมเก่าและนำเข้า JSON ในเว็บใหม่ สำรองข้อมูลเป็นประจำเพื่อป้องกันข้อมูลหาย</div>
-<main><section class="panel"><h2>บันทึกเที่ยววิ่ง</h2><p class="hint">ช่องผู้ว่าจ้าง สถานที่รับ และสถานที่ส่งจะแนะนำข้อความที่เคยบันทึก · กด × ข้างชื่อเพื่อลบจากรายการแนะนำ โดยจะถามยืนยันก่อนลบและไม่กระทบเที่ยววิ่งเดิม · กรอกข้อมูลแล้วตรวจผลคำนวณ ก่อนกด “บันทึกเพิ่มแถว” ข้อมูลจะถูกเก็บในเบราว์เซอร์ของเว็บทดลองนี้</p>
-<div class="fields"><label>วันที่<input id="date" type="date"></label><label>ประเภทงาน (รูปแบบรถ)<select id="vehicle"><option>6 ล้อ</option><option selected>6 ล้อพ่วง</option><option>10 ล้อ</option><option>10 ล้อพ่วง</option></select></label><label>ผู้ว่าจ้าง<span class="suggest-wrap"><input id="client" placeholder="ชื่อผู้ว่าจ้าง" autocomplete="off" aria-autocomplete="list" aria-controls="suggest-client" aria-expanded="false"><span id="suggest-client" class="suggest-list" role="listbox" hidden></span></span></label><label>สถานที่รับ<span class="suggest-wrap"><input id="pickup" placeholder="สถานที่รับสินค้า" autocomplete="off" aria-autocomplete="list" aria-controls="suggest-pickup" aria-expanded="false"><span id="suggest-pickup" class="suggest-list" role="listbox" hidden></span></span></label><label>สถานที่ส่ง<span class="suggest-wrap"><input id="dropoff" placeholder="สถานที่ส่งสินค้า" autocomplete="off" aria-autocomplete="list" aria-controls="suggest-dropoff" aria-expanded="false"><span id="suggest-dropoff" class="suggest-list" role="listbox" hidden></span></span></label></div>
-<div class="group"><h3>ระยะทาง (เลขไมล์ไม่บังคับ)</h3><div class="groupgrid two"><label>เริ่มงาน · เลขไมล์ (km)<input id="startKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="385000"></label><label>จบงาน · เลขไมล์ (km)<input id="endKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="385250"></label></div><output id="distancePreview">ระยะทาง: 0 km</output><p class="hint">เว้นเลขไมล์ได้และบันทึกงานได้ตามปกติ · จะแสดงระยะทาง 0 กม. แต่ไม่เอาเลขไมล์ 0 ไปคำนวณสะสมรายเดือน</p></div>
-<div class="group"><h3>ค่าขนส่งและค่าใช้จ่าย</h3><div class="groupgrid two"><label>ค่าขนส่ง (บาท)<input id="fare" type="number" min="0" step="0.01" inputmode="decimal" placeholder="11800"></label><label>หักค่าขนส่ง (%)<input id="percent" type="number" min="0" max="100" step="0.01" inputmode="decimal" value="13"></label></div>
-<div class="tollWrap"><label for="toll">ค่าทางด่วนและอื่น ๆ (บาท)</label><input id="toll" type="number" min="0" step="0.01" inputmode="decimal" placeholder="กรอกยอดรวม เช่น 275"><p class="muted" style="margin:7px 0 0">กรอกยอดรวมได้ที่นี่ หากต้องการแยกหลายรายการให้ใช้เมนู “บันทึกค่าทางด่วนและอื่น ๆ ย้อนหลัง”</p>
-<button type="button" id="tollToggle" class="secondary tollToggle" aria-expanded="false" hidden style="display:none">＋ เพิ่มค่าทางด่วน / ค่าใช้จ่ายหลายรายการ</button>
-<div id="tollDetailPanel" hidden style="display:none"><div id="tollItems"></div><button type="button" id="tollAdd" class="secondary tollAdd">＋ เพิ่มรายการอีกใบ</button><p class="muted">ชื่อด่านหรือรายการไม่บังคับ · ยอดรวมคำนวณจากทุกรายการอัตโนมัติ</p></div>
-</div>
-<div class="group"><h3>เติมน้ำมัน (ถ้าไม่ได้เติม ให้เว้นว่าง)</h3><div class="groupgrid"><label>ค่าน้ำมันที่จ่าย (บาท)<input id="oilTotal" type="number" min="0" step="0.01" inputmode="decimal" placeholder="5125"></label><label>ราคาต่อลิตร (บาท)<input id="price" type="number" min="0" step="0.01" inputmode="decimal" placeholder="41"></label><label>จำนวนลิตร · คำนวณ<input id="liters" class="readonly" readonly placeholder="0.00"></label></div><p class="hint">จำนวนลิตร = ค่าน้ำมันที่จ่าย ÷ ราคาต่อลิตร (ต้องกรอกราคาต่อลิตรมากกว่า 0) · ยอดเงินเก็บไว้แยกตามการเติมแต่ละครั้ง ไม่ใช้ในสูตร กม./ลิตร</p></div>
-<div class="fields"><label>หมายเหตุ<input id="note" placeholder="ถ้ามี"></label></div>
-<div id="editBanner" class="editing" hidden>กำลังแก้ไขเที่ยววิ่ง <span id="editNum"></span> — เปลี่ยนข้อมูลแล้วกด “บันทึกการแก้ไข” เพื่ออัปเดตแถวเดิม</div><div class="preview" id="tripPreview">ผลคำนวณเที่ยวนี้: —</div><div class="buttons"><button id="save" type="button">บันทึกเพิ่มแถว</button><button id="cancelEdit" type="button" class="secondary" hidden>ยกเลิกการแก้ไข</button><button id="demo" type="button" class="secondary">ลองกรอกตัวอย่าง</button><button id="clear" type="button" class="secondary">ล้างช่องกรอก</button></div><div class="status" id="status" role="status" aria-live="polite"></div></section>
+<header class="restoredHeader"><img alt="QLR รายงานการขนส่งสินค้า ภาพรถ Hino และเสือสีขาว" src="./header.jpg"/><span class="sr-only">รายงานการขนส่งสินค้า</span></header><div style="padding:12px;background:#fff7df;color:#654900;font-size:13px"><b>TLR V1.13 · ทดลองหน้ากรอกแบบ 5 ขั้นตอน</b> — ข้อมูลเก็บแยกในแต่ละเครื่อง ก่อนย้ายจากไฟล์ HTML เดิม ให้กดสำรอง JSON ในโปรแกรมเก่าและนำเข้า JSON ในเว็บใหม่ สำรองข้อมูลเป็นประจำเพื่อป้องกันข้อมูลหาย</div>
+<main><section class="panel"><h2>บันทึกเที่ยววิ่ง · แบบฟอร์ม 5 ขั้นตอน</h2><div class="tlr-wizard" id="tlrWizard"><div class="tlr-wizard-head"><div class="tlr-step-meta"><span id="tlrStepCount">ขั้นตอน 1 จาก 5</span><span>TLR V1.13 · แบบฟอร์มใหม่</span></div><div class="tlr-progress"><div id="tlrProgressFill"></div></div><div aria-label="ขั้นตอนการกรอกข้อมูล" class="tlr-tabstrip" role="navigation"><button class="tlr-tab is-active" data-step="0" type="button">1 ข้อมูลงาน</button><button class="tlr-tab" data-step="1" type="button">2 ระยะทาง</button><button class="tlr-tab" data-step="2" type="button">3 ค่าขนส่ง</button><button class="tlr-tab" data-step="3" type="button">4 น้ำมัน</button><button class="tlr-tab" data-step="4" type="button">5 ตรวจสอบ</button></div></div><section class="tlr-step" data-step="0" id="tlrStep0"><h3>ข้อมูลเที่ยววิ่ง</h3><p class="hint">แบบฟอร์มทดลองสไตล์ Google Forms · กรอกทีละหมวดและย้อนกลับแก้ไขได้ · ระบบบันทึกและการคำนวณเดิมยังอยู่</p><div class="fields"><label>วันที่<input id="date" type="date"/></label><label>ประเภทงาน (รูปแบบรถ)<select id="vehicle"><option>6 ล้อ</option><option selected="">6 ล้อพ่วง</option><option>10 ล้อ</option><option>10 ล้อพ่วง</option></select></label><label>ผู้ว่าจ้าง<span class="suggest-wrap"><input aria-autocomplete="list" aria-controls="suggest-client" aria-expanded="false" autocomplete="off" id="client" placeholder="ชื่อผู้ว่าจ้าง"/><span class="suggest-list" hidden="" id="suggest-client" role="listbox"></span></span></label><label>สถานที่รับ<span class="suggest-wrap"><input aria-autocomplete="list" aria-controls="suggest-pickup" aria-expanded="false" autocomplete="off" id="pickup" placeholder="สถานที่รับสินค้า"/><span class="suggest-list" hidden="" id="suggest-pickup" role="listbox"></span></span></label><label>สถานที่ส่ง<span class="suggest-wrap"><input aria-autocomplete="list" aria-controls="suggest-dropoff" aria-expanded="false" autocomplete="off" id="dropoff" placeholder="สถานที่ส่งสินค้า"/><span class="suggest-list" hidden="" id="suggest-dropoff" role="listbox"></span></span></label></div></section><section class="tlr-step" data-step="1" hidden="" id="tlrStep1"><h3>เลขไมล์และระยะทาง</h3><p class="hint">เลขไมล์ไม่บังคับ สามารถข้ามได้</p><div class="group"><h3>ระยะทาง (เลขไมล์ไม่บังคับ)</h3><div class="groupgrid two"><label>เริ่มงาน · เลขไมล์ (km)<input id="startKm" inputmode="decimal" min="0" placeholder="385000" step="0.1" type="number"/></label><label>จบงาน · เลขไมล์ (km)<input id="endKm" inputmode="decimal" min="0" placeholder="385250" step="0.1" type="number"/></label></div><output id="distancePreview">ระยะทาง: 0 km</output><p class="hint">เว้นเลขไมล์ได้และบันทึกงานได้ตามปกติ · จะแสดงระยะทาง 0 กม. แต่ไม่เอาเลขไมล์ 0 ไปคำนวณสะสมรายเดือน</p></div></section><section class="tlr-step" data-step="2" hidden="" id="tlrStep2"><h3>ค่าขนส่งและค่าทางด่วน</h3><p class="hint">กรอกค่าขนส่งและค่าใช้จ่ายสำหรับเที่ยวนี้</p><div class="groupgrid two"><label>ค่าขนส่ง (บาท)<input id="fare" inputmode="decimal" min="0" placeholder="11800" step="0.01" type="number"/></label><label>หักค่าขนส่ง (%)<input id="percent" inputmode="decimal" max="100" min="0" step="0.01" type="number" value="13"/></label></div><div class="tollWrap"><label for="toll">ค่าทางด่วนและอื่น ๆ (บาท)</label><input id="toll" inputmode="decimal" min="0" placeholder="กรอกยอดรวม เช่น 275" step="0.01" type="number"/><p class="muted" style="margin:7px 0 0">กรอกยอดรวมได้ที่นี่ หากต้องการแยกหลายรายการให้ใช้เมนู “บันทึกค่าทางด่วนและอื่น ๆ ย้อนหลัง”</p>
+<button aria-expanded="false" class="secondary tollToggle" hidden="" id="tollToggle" style="display:none" type="button">＋ เพิ่มค่าทางด่วน / ค่าใช้จ่ายหลายรายการ</button>
+<div hidden="" id="tollDetailPanel" style="display:none"><div id="tollItems"></div><button class="secondary tollAdd" id="tollAdd" type="button">＋ เพิ่มรายการอีกใบ</button><p class="muted">ชื่อด่านหรือรายการไม่บังคับ · ยอดรวมคำนวณจากทุกรายการอัตโนมัติ</p></div>
+</div></section><section class="tlr-step" data-step="3" hidden="" id="tlrStep3"><h3>การเติมน้ำมัน</h3><p class="hint">เว้นว่างได้หากไม่มีการเติมน้ำมัน</p><div class="group"><h3>เติมน้ำมัน (ถ้าไม่ได้เติม ให้เว้นว่าง)</h3><div class="groupgrid"><label>ค่าน้ำมันที่จ่าย (บาท)<input id="oilTotal" inputmode="decimal" min="0" placeholder="5125" step="0.01" type="number"/></label><label>ราคาต่อลิตร (บาท)<input id="price" inputmode="decimal" min="0" placeholder="41" step="0.01" type="number"/></label><label>จำนวนลิตร · คำนวณ<input class="readonly" id="liters" placeholder="0.00" readonly=""/></label></div><p class="hint">จำนวนลิตร = ค่าน้ำมันที่จ่าย ÷ ราคาต่อลิตร (ต้องกรอกราคาต่อลิตรมากกว่า 0) · ยอดเงินเก็บไว้แยกตามการเติมแต่ละครั้ง ไม่ใช้ในสูตร กม./ลิตร</p></div></section><section class="tlr-step" data-step="4" hidden="" id="tlrStep4"><h3>ตรวจสอบและบันทึก</h3><p class="hint">ตรวจสอบยอดคำนวณก่อนกดบันทึก</p><div class="fields"><label>หมายเหตุ<input id="note" placeholder="ถ้ามี"/></label></div><div class="editing" hidden="" id="editBanner">กำลังแก้ไขเที่ยววิ่ง <span id="editNum"></span> — เปลี่ยนข้อมูลแล้วกด “บันทึกการแก้ไข” เพื่ออัปเดตแถวเดิม</div><div class="preview" id="tripPreview">ผลคำนวณเที่ยวนี้: —</div><div class="buttons"><button id="save" type="button">บันทึกเพิ่มแถว</button><button class="secondary" hidden="" id="cancelEdit" type="button">ยกเลิกการแก้ไข</button><button class="secondary" id="demo" type="button">ลองกรอกตัวอย่าง</button><button class="secondary" id="clear" type="button">ล้างช่องกรอก</button></div><div aria-live="polite" class="status" id="status" role="status"></div></section><div class="tlr-wizard-nav"><button class="secondary" hidden="" id="tlrPrev" type="button">← ย้อนกลับ</button><button id="tlrNext" type="button">ถัดไป →</button><span hidden="" id="tlrFinishHint">ตรวจสอบข้อมูลแล้วกด “บันทึกเพิ่มแถว” ด้านบน</span></div></div><p class="hint">ช่องผู้ว่าจ้าง สถานที่รับ และสถานที่ส่งจะแนะนำข้อความที่เคยบันทึก · กด × ข้างชื่อเพื่อลบจากรายการแนะนำ โดยจะถามยืนยันก่อนลบและไม่กระทบเที่ยววิ่งเดิม · กรอกข้อมูลแล้วตรวจผลคำนวณ ก่อนกด “บันทึกเพิ่มแถว” ข้อมูลจะถูกเก็บในเบราว์เซอร์ของเว็บทดลองนี้</p>
+
+
+</section>
 <section class="panel" id="ledgerPanel"><h2>บันทึกค่าทางด่วนและอื่น ๆ ย้อนหลัง</h2>
 <p class="hint">เลือกวันที่ กรอกชื่อด่านหรือค่าใช้จ่ายอื่น ๆ (ไม่บังคับ) และจำนวนเงินแต่ละรายการ แล้วกดบันทึก ยอดจะรวมในรายงานประจำวันของวันที่เลือกโดยอัตโนมัติ แม้ยังไม่มีเที่ยววิ่งในวันนั้น</p>
-<div class="tollLedger"><label>วันที่ของค่าทางด่วน<input id="ledgerDate" type="date"></label>
+<div class="tollLedger"><label>วันที่ของค่าทางด่วน<input id="ledgerDate" type="date"/></label>
 <div id="ledgerDraftRows"></div><p class="muted">เลือกเที่ยววิ่งให้แต่ละรายการได้ หากไม่เลือก ระบบจะรวมไว้ที่เที่ยวสุดท้ายของวัน</p>
-<button type="button" id="ledgerAdd" class="secondary">＋ เพิ่มค่าใช้จ่ายอีกรายการ</button>
-<div id="ledgerDraftTotal" class="ledgerDraft">ยอดรอบนี้ 0.00 บาท</div>
-<button type="button" id="ledgerSave" class="saved">บันทึกค่าทางด่วนและอื่น ๆ</button>
-<div id="ledgerStatus" class="ledgerStatus" role="status"></div></div>
+<button class="secondary" id="ledgerAdd" type="button">＋ เพิ่มค่าใช้จ่ายอีกรายการ</button>
+<div class="ledgerDraft" id="ledgerDraftTotal">ยอดรอบนี้ 0.00 บาท</div>
+<button class="saved" id="ledgerSave" type="button">บันทึกค่าทางด่วนและอื่น ๆ</button>
+<div class="ledgerStatus" id="ledgerStatus" role="status"></div></div>
 <div class="ledgerStatus" id="ledgerDaySummary">รายการที่บันทึกในวันที่เลือกจะแสดงในตารางเที่ยววิ่งด้านล่าง</div></section>
 <section class="panel"><h2>ตารางเที่ยววิ่งที่บันทึกไว้</h2><p class="hint">เลื่อนซ้าย–ขวาเพื่อดูรายละเอียดทั้งหมด ปุ่มแก้ไขและลบอยู่ท้ายแถว · ยอดรวมน้ำมัน ค่าน้ำมัน ยอดหัก และเงินคงเหลือคิดจาก <strong>ทุกเที่ยวที่บันทึกไว้</strong> ส่วนระยะทางรวมทั้งเดือนใช้เลขไมล์เริ่มงานของรายการแรกในเดือนถึงเลขไมล์จบงานล่าสุดในเดือนที่เลือก</p>
 <div class="scroll"><table class="triptable"><thead><tr><th>No.</th><th>วันที่</th><th>ประเภทงาน (รูปแบบรถ)</th><th>ผู้ว่าจ้าง</th><th>สถานที่รับ</th><th>สถานที่ส่ง</th><th>ระยะทาง (km)</th><th>น้ำมัน (ลิตร)</th><th>ค่าน้ำมัน (บาท)</th><th>ค่าขนส่ง (บาท)</th><th>หัก (%)</th><th>ค่าทางด่วนและอื่น ๆ (บาท)</th><th>หมายเหตุ</th><th>จัดการ</th></tr></thead>
-<tbody id="rows"><tr><td colspan="14" class="empty">ยังไม่มีรายการ</td></tr></tbody>
+<tbody id="rows"><tr><td class="empty" colspan="14">ยังไม่มีรายการ</td></tr></tbody>
 </table></div>
-<section class="compact-totals" aria-label="สรุปยอดท้ายตาราง"><h3>สรุปยอดท้ายตาราง</h3><p class="muted">ระยะทางตามเดือนที่เลือก · ยอดอื่นรวมทุกเที่ยวที่บันทึก</p>
+<section aria-label="สรุปยอดท้ายตาราง" class="compact-totals"><h3>สรุปยอดท้ายตาราง</h3><p class="muted">ระยะทางตามเดือนที่เลือก · ยอดอื่นรวมทุกเที่ยวที่บันทึก</p>
 <div class="total-line"><span>ระยะทางรวมทั้งเดือน</span><strong id="grandDistance">0 km</strong></div>
 <div class="total-line"><span>น้ำมัน</span><strong id="grandLiters">0 ลิตร</strong></div>
 <div class="total-line"><span>ค่าน้ำมันรวม</span><strong id="grandFuel">0.00 บาท</strong></div>
 <div class="total-line"><span>ยอดเงินหักเปอร์เซ็นต์ค่าขนส่งรวม</span><strong id="grandDeduction">0.00 บาท</strong></div>
 <div class="total-line total-final"><span>เงินคงเหลือหลังหักค่าใช้จ่ายที่บันทึกทั้งหมด</span><strong id="grandBalance">0.00 บาท</strong></div></section>
-<div class="buttons"><button id="csv" type="button" class="secondary">ส่งออก CSV</button><button id="backup" type="button" class="secondary">สำรอง JSON</button><button id="importButton" type="button" class="secondary">นำเข้า JSON</button><input id="importFile" hidden type="file" accept=".json,application/json"></div><p class="muted">ข้อมูลบันทึกอยู่ในเบราว์เซอร์ของเว็บไซต์นี้ แนะนำให้สำรอง JSON เป็นระยะ และก่อนนำเข้าข้อมูลเก่าทับข้อมูลปัจจุบัน</p></section>
-<section class="panel"><div class="flex"><h2 style="margin:0">สรุปประจำเดือน</h2><label>เลือกเดือน<input id="month" type="month"></label></div><div class="buttons"><button id="printMonth" type="button">🖨 พิมพ์รายงาน A4 แนวนอน / บันทึก PDF</button></div><p class="hint">รายงานจะพิมพ์เฉพาะเที่ยววิ่งของเดือนที่เลือก ระยะทางรวมใช้เลขไมล์ต้นเดือนที่มีข้อมูลถึงรายการล่าสุดที่มีเลขไมล์ หากรายการมากจะแบ่งหลายหน้าอัตโนมัติ</p><div class="stats sectiongap"><div class="stat"><small>เที่ยววิ่งที่บันทึก</small><strong id="mTrips">0 เที่ยว</strong></div><div class="stat"><small>ระยะทางรวมทั้งเดือน</small><strong id="mDistance">0 km</strong></div><div class="stat"><small>น้ำมัน</small><strong id="mLiters">0 ลิตร</strong></div><div class="stat"><small>ค่าน้ำมันที่เติมรวม</small><strong id="mFuel">0 บาท</strong></div><div class="stat"><small>อัตราสิ้นเปลืองเฉลี่ย (ประมาณ)</small><strong id="mEfficiency">— กม./ลิตร</strong></div></div>
+<div class="buttons"><button class="secondary" id="csv" type="button">ส่งออก CSV</button><button class="secondary" id="backup" type="button">สำรอง JSON</button><button class="secondary" id="importButton" type="button">นำเข้า JSON</button><input accept=".json,application/json" hidden="" id="importFile" type="file"/></div><p class="muted">ข้อมูลบันทึกอยู่ในเบราว์เซอร์ของเว็บไซต์นี้ แนะนำให้สำรอง JSON เป็นระยะ และก่อนนำเข้าข้อมูลเก่าทับข้อมูลปัจจุบัน</p></section>
+<section class="panel"><div class="flex"><h2 style="margin:0">สรุปประจำเดือน</h2><label>เลือกเดือน<input id="month" type="month"/></label></div><div class="buttons"><button id="printMonth" type="button">🖨 พิมพ์รายงาน A4 แนวนอน / บันทึก PDF</button></div><p class="hint">รายงานจะพิมพ์เฉพาะเที่ยววิ่งของเดือนที่เลือก ระยะทางรวมใช้เลขไมล์ต้นเดือนที่มีข้อมูลถึงรายการล่าสุดที่มีเลขไมล์ หากรายการมากจะแบ่งหลายหน้าอัตโนมัติ</p><div class="stats sectiongap"><div class="stat"><small>เที่ยววิ่งที่บันทึก</small><strong id="mTrips">0 เที่ยว</strong></div><div class="stat"><small>ระยะทางรวมทั้งเดือน</small><strong id="mDistance">0 km</strong></div><div class="stat"><small>น้ำมัน</small><strong id="mLiters">0 ลิตร</strong></div><div class="stat"><small>ค่าน้ำมันที่เติมรวม</small><strong id="mFuel">0 บาท</strong></div><div class="stat"><small>อัตราสิ้นเปลืองเฉลี่ย (ประมาณ)</small><strong id="mEfficiency">— กม./ลิตร</strong></div></div>
 <div class="group sectiongap"><h3>เลขไมล์เริ่มต้นเดือน – เลขไมล์จบงานล่าสุด</h3><div class="stats"><div class="stat"><small>เลขไมล์เริ่มงานแรกของเดือน</small><strong id="mStart">—</strong></div><div class="stat"><small>เลขไมล์จบงานล่าสุด</small><strong id="mEnd">—</strong></div><div class="stat"><small>ผลต่างเลขไมล์</small><strong id="mOdo">—</strong></div></div><p class="muted">สูตรระยะทาง: เลขไมล์เริ่มงานที่บันทึกไว้เป็นครั้งแรกของเดือน ถึงเลขไมล์จบงานครั้งล่าสุดของเดือน โดยข้ามรายการที่ไม่มีเลขไมล์ (ค่า 0) · รวมระยะทางรถเปล่าที่อยู่ระหว่างเลขไมล์ทั้งสองด้วย · สูตรเฉลี่ย: ระยะทางสะสม ÷ ลิตรน้ำมันที่เติมสะสมในเดือน โดยไม่ใช้จำนวนเงินเป็นตัวหาร</p></div>
 <div class="scroll sectiongap"><table class="monthlytbl"><tbody><tr><td>ค่าขนส่งรวม</td><td id="mFare">0.00 บาท</td></tr><tr><td>หักเปอร์เซ็นต์ค่าขนส่งรวม</td><td id="mDeduct">−0.00 บาท</td></tr><tr class="subtotal"><td>ค่าขนส่งสุทธิหลังหักเปอร์เซ็นต์</td><td id="mNetFare">0.00 บาท</td></tr><tr><td>หักค่าน้ำมันที่เติมจริง</td><td id="mFuelExpense">−0.00 บาท</td></tr><tr><td>หักค่าทางด่วนและอื่น ๆ</td><td id="mToll">−0.00 บาท</td></tr><tr class="subtotal"><td>ค่าใช้จ่ายที่บันทึกไว้รวม</td><td id="mExpenses">0.00 บาท</td></tr><tr class="final"><td>เงินคงเหลือหลังหักค่าใช้จ่ายที่บันทึก</td><td id="mBalance">0.00 บาท</td></tr></tbody></table></div>
 <p class="muted warning">หมายเหตุ: น้ำมันที่เติมแต่ละครั้งอาจใช้ต่อเนื่องหลายวัน สรุป กม./ลิตร เป็นค่าเฉลี่ยประมาณจากยอดเติมสะสมของเดือน ไม่ใช่น้ำมันที่ใช้จริงอย่างแม่นยำ เพราะอาจมีน้ำมันคงเหลือในถัง · ค่าเติมน้ำมันเป็นเงินบาทยังเก็บไว้ตามรายการแยกจากสูตร กม./ลิตร · เงินคงเหลือยังไม่ใช่กำไรสุทธิ</p></section>
 <section class="panel"><p class="muted">ต้นแบบนี้เป็นเว็บไซต์แยกจาก TLR เดิม กรุณาอย่าอัปโหลดทับโปรเจกต์เดิมจนกว่าจะทดสอบแล้วว่าถูกต้อง ข้อมูลจะเก็บในเบราว์เซอร์ของเว็บไซต์ทดลองนี้ และควรสำรอง JSON เป็นระยะ</p></section>
 </main>
-<section id="dayOverlay" class="dayOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="dayHeading">
- <div class="daySheet"><div class="dayToolbar"><button type="button" id="dayClose" class="secondary">← กลับไปตาราง</button><button type="button" id="dayPrint">🖨 พิมพ์ / บันทึก PDF</button></div>
- <article id="dayReport" class="dayReport"><div class="dayBrand">TLR · รายงานประจำวัน</div><h2 id="dayHeading"></h2><p id="dayMeta"></p>
- <h3>รายละเอียดเที่ยววิ่ง</h3><div class="dayScroll"><table class="dayTable"><thead><tr><th>เที่ยว</th><th>รูปแบบรถ / ผู้ว่าจ้าง</th><th>รับ → ส่ง</th><th>กม.</th><th>ค่าขนส่ง</th><th>หัก %</th><th>น้ำมัน</th><th>ค่าทางด่วนและอื่น ๆ</th></tr></thead><tbody id="dayTrips"></tbody></table></div>
- <h3>รายละเอียดค่าทางด่วนประจำวัน</h3><div class="dayScroll"><table class="dayTable"><thead><tr><th>ลำดับ</th><th>ชื่อด่าน / รายการ</th><th>จำนวนเงิน (บาท)</th><th class="dayEditCol">จัดการ</th></tr></thead><tbody id="dayTolls"></tbody></table></div>
- <div id="dayTotals" class="dayTotals"></div><p class="dayFootnote">ยอดคงเหลือเป็นยอดหลังหักค่าใช้จ่ายที่บันทึกไว้ ไม่ใช่กำไรสุทธิ · ค่าทางด่วนของวันถูกหักเพียงครั้งเดียว</p></article>
- </div>
+<section aria-labelledby="dayHeading" aria-modal="true" class="dayOverlay" hidden="" id="dayOverlay" role="dialog">
+<div class="daySheet"><div class="dayToolbar"><button class="secondary" id="dayClose" type="button">← กลับไปตาราง</button><button id="dayPrint" type="button">🖨 พิมพ์ / บันทึก PDF</button></div>
+<article class="dayReport" id="dayReport"><div class="dayBrand">TLR · รายงานประจำวัน</div><h2 id="dayHeading"></h2><p id="dayMeta"></p>
+<h3>รายละเอียดเที่ยววิ่ง</h3><div class="dayScroll"><table class="dayTable"><thead><tr><th>เที่ยว</th><th>รูปแบบรถ / ผู้ว่าจ้าง</th><th>รับ → ส่ง</th><th>กม.</th><th>ค่าขนส่ง</th><th>หัก %</th><th>น้ำมัน</th><th>ค่าทางด่วนและอื่น ๆ</th></tr></thead><tbody id="dayTrips"></tbody></table></div>
+<h3>รายละเอียดค่าทางด่วนประจำวัน</h3><div class="dayScroll"><table class="dayTable"><thead><tr><th>ลำดับ</th><th>ชื่อด่าน / รายการ</th><th>จำนวนเงิน (บาท)</th><th class="dayEditCol">จัดการ</th></tr></thead><tbody id="dayTolls"></tbody></table></div>
+<div class="dayTotals" id="dayTotals"></div><p class="dayFootnote">ยอดคงเหลือเป็นยอดหลังหักค่าใช้จ่ายที่บันทึกไว้ ไม่ใช่กำไรสุทธิ · ค่าทางด่วนของวันถูกหักเพียงครั้งเดียว</p></article>
+</div>
 </section>
-<section id="printReport" aria-label="รายงานรายเดือนสำหรับพิมพ์">
-  <div class="print-brand"><strong>TLR</strong><div><h1>รายงานบันทึกเที่ยววิ่งรถบรรทุก</h1><p id="printPeriod">ประจำเดือน —</p></div></div>
-  <p class="print-note">รายงานจากข้อมูลเที่ยววิ่งที่บันทึกใน TLR — จัดทำ ณ <span id="printGenerated"></span></p>
-  <table id="printTrips"><thead><tr><th>No.</th><th>วันที่</th><th>ประเภทงาน (รูปแบบรถ)</th><th>ผู้ว่าจ้าง</th><th>สถานที่รับ</th><th>สถานที่ส่ง</th><th>ระยะทาง<br>(km)</th><th>น้ำมัน<br>(ลิตร)</th><th>ค่าน้ำมัน<br>(บาท)</th><th>ค่าขนส่ง<br>(บาท)</th><th>หัก % / บาท</th><th>ค่าทางด่วนและอื่น ๆ<br>(บาท)</th><th>คงเหลือ<br>(บาท)</th><th>หมายเหตุ</th></tr></thead><tbody id="printRows"></tbody></table>
-  <div class="print-summary"><h2>สรุปยอดประจำเดือน</h2><div class="print-sumgrid" id="printSummary"></div><p class="print-disclaimer">หมายเหตุ: สรุป กม./ลิตร = ระยะทางเลขไมล์ต้นเดือนถึงล่าสุด ÷ ลิตรเติมสะสม เป็นค่าประมาณ เพราะอาจมีน้ำมันคงเหลือในถัง ยอดเงินที่เติมแสดงแยกไว้และไม่ใช้ในสูตร กม./ลิตร เงินคงเหลือไม่ใช่กำไรสุทธิ</p></div>
+<section aria-label="รายงานรายเดือนสำหรับพิมพ์" id="printReport">
+<div class="print-brand"><strong>TLR</strong><div><h1>รายงานบันทึกเที่ยววิ่งรถบรรทุก</h1><p id="printPeriod">ประจำเดือน —</p></div></div>
+<p class="print-note">รายงานจากข้อมูลเที่ยววิ่งที่บันทึกใน TLR — จัดทำ ณ <span id="printGenerated"></span></p>
+<table id="printTrips"><thead><tr><th>No.</th><th>วันที่</th><th>ประเภทงาน (รูปแบบรถ)</th><th>ผู้ว่าจ้าง</th><th>สถานที่รับ</th><th>สถานที่ส่ง</th><th>ระยะทาง<br/>(km)</th><th>น้ำมัน<br/>(ลิตร)</th><th>ค่าน้ำมัน<br/>(บาท)</th><th>ค่าขนส่ง<br/>(บาท)</th><th>หัก % / บาท</th><th>ค่าทางด่วนและอื่น ๆ<br/>(บาท)</th><th>คงเหลือ<br/>(บาท)</th><th>หมายเหตุ</th></tr></thead><tbody id="printRows"></tbody></table>
+<div class="print-summary"><h2>สรุปยอดประจำเดือน</h2><div class="print-sumgrid" id="printSummary"></div><p class="print-disclaimer">หมายเหตุ: สรุป กม./ลิตร = ระยะทางเลขไมล์ต้นเดือนถึงล่าสุด ÷ ลิตรเติมสะสม เป็นค่าประมาณ เพราะอาจมีน้ำมันคงเหลือในถัง ยอดเงินที่เติมแสดงแยกไว้และไม่ใช้ในสูตร กม./ลิตร เงินคงเหลือไม่ใช่กำไรสุทธิ</p></div>
 </section>
-
 <script>
 (function(){'use strict';
 const $=id=>document.getElementById(id), key='tlr-table-monthly-v3-20261113'; // ใช้พื้นที่ข้อมูลรุ่น 3 ต่อ เพื่อรักษาข้อมูลเก่าบนโดเมนเดิม
@@ -477,4 +505,26 @@ $('printMonth').addEventListener('click',()=>{if(!val('month')){setMessage('ก�
 window.addEventListener('beforeprint',()=>{if(!document.body.classList.contains('day-print-mode'))makeMonthlyPrintReport()});
 editingUI();render();calc();
 })();
-</script><script>if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(console.warn));</script></body></html>
+</script><script>if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(console.warn));</script><script>
+(function(){'use strict';
+ let step=0;
+ const steps=[...document.querySelectorAll('.tlr-step')],tabs=[...document.querySelectorAll('.tlr-tab')];
+ const prev=document.getElementById('tlrPrev'),next=document.getElementById('tlrNext');
+ function show(n,scroll){
+   step=Math.max(0,Math.min(steps.length-1,n));
+   steps.forEach((el,i)=>{el.hidden=i!==step;});
+   tabs.forEach((el,i)=>{el.classList.toggle('is-active',i===step);el.setAttribute('aria-current',i===step?'step':'false');});
+   document.getElementById('tlrStepCount').textContent='ขั้นตอน '+(step+1)+' จาก '+steps.length;
+   document.getElementById('tlrProgressFill').style.width=((step+1)/steps.length*100)+'%';
+   prev.hidden=step===0;next.hidden=step===steps.length-1;
+   document.getElementById('tlrFinishHint').hidden=step!==steps.length-1;
+   if(scroll)document.getElementById('tlrWizard').scrollIntoView({behavior:'smooth',block:'start'});
+ }
+ prev.addEventListener('click',()=>show(step-1,true));next.addEventListener('click',()=>show(step+1,true));
+ tabs.forEach(b=>b.addEventListener('click',()=>show(Number(b.dataset.step),true)));
+ // Editing existing rows loads the existing data then makes the first step visible.
+ document.getElementById('rows').addEventListener('click',e=>{if(e.target.closest('.editbtn'))setTimeout(()=>show(0,true),0)},true);
+ document.getElementById('save').addEventListener('click',()=>{setTimeout(()=>{const msg=document.getElementById('status').textContent;if(msg&&/บันทึก/.test(msg)&&!/ไม่สำเร็จ|กรุณา/.test(msg))show(0,true)},0)},false);
+ show(0,false);
+})();
+</script></body></html>
